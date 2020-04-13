@@ -121,7 +121,7 @@ app.post('/delete', function(req, res){
   else{
     List.findOneAndUpdate({name:origin},{$pull: {items:{_id: elementId}}}, function(err){
       console.log(`Removed ${elementId} from list ${origin}`);
-      res.redirect('/'+origin);
+      res.redirect('/custom/'+origin);
     });
   }
 
