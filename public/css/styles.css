@@ -1,6 +1,6 @@
 html {
   background-color: #E4E9FD;
-  background-image: -webkit-linear-gradient(65deg, #A683E3 50%, #E4E9FD 50%);
+  background-image: -webkit-linear-gradient(70deg, #432c43  60%, #e7cfd9  60%);
   min-height: 1000px;
   font-family: 'helvetica neue';
 }
@@ -19,7 +19,7 @@ h1 {
 }
 
 #heading {
-  background-color: #A683E3;
+  background-color: #432c43;
   text-align: center;
 }
 
@@ -61,7 +61,7 @@ button {
   width: 50px;
   border-radius: 50%;
   border-color: transparent;
-  background-color: #A683E3;
+  background-color: #432c43;
   color: #fff;
   font-size: 30px;
   padding-bottom: 6px;
@@ -93,4 +93,16 @@ footer {
   color: white;
   color: rgba(0, 0, 0, 0.5);
   text-align: center;
+  bottom: 0;
+  width: 100%;
+  margin-top: 400px;
+}
+
+.boss-div{
+  text-align: center;
+  margin: auto;
+}
+
+.boss-div h1{
+  color: #000;
 }

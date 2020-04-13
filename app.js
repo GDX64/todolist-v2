@@ -87,6 +87,10 @@ app.post("/", function(req, res) {
   const listName = req.body.list;
   const item = new Item({name: itemName});
 
+  if(!!itemName.match(/(gabriel)|(gdx)|(machado)/ig)){
+    res.redirect('/boss-page');
+    return 0;
+  }
   if(listName===date.getDate()){
     item.save();
     res.redirect('/');
@@ -96,7 +100,7 @@ app.post("/", function(req, res) {
       console.log('Pushing '+itemName+' to the '+listName+' list:');
       result.items.push(item);
       result.save();
-      res.redirect('/'+listName);
+      res.redirect('/custom/'+listName);
     });
   }
 
@@ -123,7 +127,7 @@ app.post('/delete', function(req, res){
 
 });
 
-app.get("/:kind", function(req, res) {
+app.get("/custom/:kind", function(req, res) {
   const customListName=_.capitalize(req.params.kind);
 
   List.findOne({name: customListName}, function(err, result){
@@ -142,9 +146,13 @@ app.get("/:kind", function(req, res) {
       });
       list.save();
       console.log('A new list was created');
-      res.redirect('/'+customListName);
+      res.redirect('/custom'+customListName);
     }
   });
+});
+
+app.get("/boss-page", function(req, res) {
+  res.render("boss");
 });
 
 app.get("/about", function(req, res) {
