@@ -36,7 +36,7 @@ item1 = new Item({
 });
 
 item2 = new Item({
-  name: '<---- cick the checkbox to drop an item'
+  name: '<---- click the checkbox to drop an item'
 });
 
 item3 = new Item({
