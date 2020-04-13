@@ -32,15 +32,15 @@ const itemSchema = new mongoose.Schema({
 const Item = mongoose.model('item', itemSchema);
 
 item1 = new Item({
-  name: 'Wake up!'
+  name: 'That\'s a list!'
 });
 
 item2 = new Item({
-  name: 'Brush my teeth'
+  name: '<---- cick the checkbox to drop an item'
 });
 
 item3 = new Item({
-  name: 'Get some coffe'
+  name: 'Write new items using the textbox above'
 });
 
 const defaultItems = [item1, item2, item3];
