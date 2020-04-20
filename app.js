@@ -1,7 +1,6 @@
 //jshint esversion:6
-//DB psw: 9GdgaUvrdOSFlRND ; usr: gmachado
-//mongo "mongodb+srv://cluster0-g6lo9.gcp.mongodb.net/test"  --username gmachado
 
+require('dotenv').config()
 const express = require("express");
 const bodyParser = require("body-parser");
 const date = require(__dirname + "/date.js");
@@ -20,7 +19,7 @@ app.use(express.static("public"));
 //=================Mongoose stuff======================
 
 
-mongoose.connect('mongodb+srv://gmachado:9GdgaUvrdOSFlRND@cluster0-g6lo9.gcp.mongodb.net/todolistDB', {
+mongoose.connect(process.env.DB_URL, {
   useNewUrlParser: true,
   useUnifiedTopology: true
 });
@@ -47,22 +46,22 @@ const defaultItems = [item1, item2, item3];
 
 const listSchema = new mongoose.Schema({
   name: String,
-  items:[itemSchema]
+  items: [itemSchema]
 });
 
-const List = mongoose.model('List',listSchema);
+const List = mongoose.model('List', listSchema);
 //======================Server stuff===========================
 
 
-app.get("/", function(req, res) {
+app.get("/", function (req, res) {
 
   //Checking the items
-  Item.find({}, function(err, results) {
+  Item.find({}, function (err, results) {
     if (err) console.log(err);
     else console.log(results);
 
     if (results.length === 0) {
-      Item.insertMany(defaultItems, function(err) {
+      Item.insertMany(defaultItems, function (err) {
         if (err) console.log(err);
         else console.log('That was pretty easy');
       });
@@ -81,57 +80,57 @@ app.get("/", function(req, res) {
 
 });
 
-app.post("/", function(req, res) {
+app.post("/", function (req, res) {
 
   const itemName = req.body.newItem;
   const listName = req.body.list;
-  const item = new Item({name: itemName});
+  const item = new Item({ name: itemName });
 
-  if(!!itemName.match(/(gabriel)|(gdx)|(machado)/ig)){
+  if (!!itemName.match(/(gabriel)|(gdx)|(machado)/ig)) {
     res.redirect('/boss-page');
     return 0;
   }
-  if(listName===date.getDate()){
+  if (listName === date.getDate()) {
     item.save();
     res.redirect('/');
   }
-  else{
-    List.findOne({name: listName}, function(err, result){
-      console.log('Pushing '+itemName+' to the '+listName+' list:');
+  else {
+    List.findOne({ name: listName }, function (err, result) {
+      console.log('Pushing ' + itemName + ' to the ' + listName + ' list:');
       result.items.push(item);
       result.save();
-      res.redirect('/custom/'+listName);
+      res.redirect('/custom/' + listName);
     });
   }
 
 });
 
-app.post('/delete', function(req, res){
+app.post('/delete', function (req, res) {
   console.log(req.body);
-  const origin=req.body.hiddenCheck;
-  const elementId=req.body.checkbox;
+  const origin = req.body.hiddenCheck;
+  const elementId = req.body.checkbox;
 
-  if(origin==date.getDate()){
-    Item.findByIdAndRemove(req.body.checkbox, function(err){
-      if(err) console.log(err);
-      else console.log("Removed: "+req.body.checkbox);
+  if (origin == date.getDate()) {
+    Item.findByIdAndRemove(req.body.checkbox, function (err) {
+      if (err) console.log(err);
+      else console.log("Removed: " + req.body.checkbox);
       res.redirect('/');
     });
   }
-  else{
-    List.findOneAndUpdate({name:origin},{$pull: {items:{_id: elementId}}}, function(err){
+  else {
+    List.findOneAndUpdate({ name: origin }, { $pull: { items: { _id: elementId } } }, function (err) {
       console.log(`Removed ${elementId} from list ${origin}`);
-      res.redirect('/custom/'+origin);
+      res.redirect('/custom/' + origin);
     });
   }
 
 });
 
-app.get("/custom/:kind", function(req, res) {
-  const customListName=_.capitalize(req.params.kind);
+app.get("/custom/:kind", function (req, res) {
+  const customListName = _.capitalize(req.params.kind);
 
-  List.findOne({name: customListName}, function(err, result){
-    if(result){
+  List.findOne({ name: customListName }, function (err, result) {
+    if (result) {
       console.log('These are the items that are going to be rendered now', result);
       //rendering the page for the user
       res.render("list", {
@@ -139,26 +138,26 @@ app.get("/custom/:kind", function(req, res) {
         newListItems: result.items
       });
     }
-    else{
+    else {
       const list = new List({
         name: customListName,
         items: defaultItems
       });
       list.save();
       console.log('A new list was created');
-      res.redirect('/custom'+customListName);
+      res.redirect('/custom' + customListName);
     }
   });
 });
 
-app.get("/boss-page", function(req, res) {
+app.get("/boss-page", function (req, res) {
   res.render("boss");
 });
 
-app.get("/about", function(req, res) {
+app.get("/about", function (req, res) {
   res.render("about");
 });
 
-app.listen(process.env.PORT||3000, function() {
+app.listen(process.env.PORT || 3000, function () {
   console.log("Server started");
 });
